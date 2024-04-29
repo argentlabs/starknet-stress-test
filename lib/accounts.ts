@@ -16,7 +16,7 @@ import {
   num,
   uint256,
 } from "starknet";
-import { ArgentSigner, KeyPair, ethAddress, loadContract, randomStarknetKeyPair, strkAddress } from ".";
+import { KeyPair, MultisigSigner, ethAddress, loadContract, randomStarknetKeyPair, strkAddress } from ".";
 import { provider } from "./provider";
 
 export class ArgentAccount extends Account {
@@ -102,7 +102,7 @@ async function deployAccountInner(params: DeployAccountParams): Promise<
   const calls = fundingCall ? [fundingCall] : [];
 
   const transactionVersion = finalParams.useTxV3 ? RPC.ETransactionVersion.V3 : RPC.ETransactionVersion.V2;
-  const signer = new ArgentSigner(finalParams.owner);
+  const signer = new MultisigSigner([finalParams.owner]);
   const account = new ArgentAccount(provider, contractAddress, signer, "1", transactionVersion);
 
   let transactionHash;

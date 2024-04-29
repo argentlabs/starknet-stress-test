@@ -1,10 +1,7 @@
 import {
   CairoCustomEnum,
-  CairoOption,
-  CairoOptionVariant,
   Call,
   CallData,
-  Calldata,
   DeclareSignerDetails,
   DeployAccountSignerDetails,
   InvocationsSignerDetails,
@@ -21,7 +18,6 @@ import {
   encode,
   hash,
   num,
-  shortString,
   stark,
   transaction,
   typedData,
@@ -145,29 +141,8 @@ export class MultisigSigner extends RawSigner {
   }
 }
 
-export class ArgentSigner extends MultisigSigner {
-  constructor(public owner: KeyPair = randomStarknetKeyPair()) {
-    super([owner]);
-  }
-}
-
 export abstract class KeyPair extends RawSigner {
   abstract get signer(): CairoCustomEnum;
-  abstract get guid(): bigint;
-  abstract get storedValue(): bigint;
-
-  public get compiledSigner(): Calldata {
-    return CallData.compile([this.signer]);
-  }
-
-  public get signerAsOption() {
-    return new CairoOption(CairoOptionVariant.Some, {
-      signer: this.signer,
-    });
-  }
-  public get compiledSignerAsOption() {
-    return CallData.compile([this.signerAsOption]);
-  }
 }
 
 export class StarknetKeyPair extends KeyPair {
@@ -184,14 +159,6 @@ export class StarknetKeyPair extends KeyPair {
 
   public get publicKey() {
     return BigInt(ec.starkCurve.getStarkKey(this.pk));
-  }
-
-  public get guid() {
-    return BigInt(hash.computePoseidonHash(shortString.encodeShortString("Starknet Signer"), this.publicKey));
-  }
-
-  public get storedValue() {
-    return this.publicKey;
   }
 
   public get signer(): CairoCustomEnum {
