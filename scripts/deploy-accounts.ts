@@ -5,6 +5,7 @@ import { DeployAccountParams, deployAccountWithoutGuardian } from "../lib";
 
 dotenv.config({ override: true });
 
+// Be careful running this script might override your existing accounts located at .env.v3Accounts.json and .env.v2Accounts.json
 // Update theses
 const accountClassHash = process.env.ARGENT_CLASS_HASH;
 const ethFundingAmount = BigInt(1e16);
